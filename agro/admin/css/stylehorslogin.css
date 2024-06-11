@@ -1,0 +1,32 @@
+.dejavendu {
+    position: absolute;
+    z-index: 2;
+    float: right;
+    color: #F65D20;
+    font-weight: bold;
+    background-repeat: no-repeat;
+    padding-left: 5px;
+    width: 75px;
+    height: 30px;
+    color: #cd0a0a;
+    opacity: 0.75;
+    margin-top: 28%;
+    margin-left: 34%;
+}
+
+.textecentre{
+	text-align: center;
+}
+
+.blanc{
+	color: #FFF;
+}
+
+.blanc a{
+	color: #FFF;
+	text-decoration: none;
+}
+.blanc a{
+	color: #FFF;
+	text-decoration: underline;
+}

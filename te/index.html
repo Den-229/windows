@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Box</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="chat-container">
+    <button onclick="startRecording()">Start Recording</button>
+    <button onclick="stopRecording()">Stop Recording</button>
+    <audio id="audio-player" controls></audio>
+    <button onclick="sendAudioMessage()">Send Audio Message</button>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <!-- Messages seront affichés ici -->
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

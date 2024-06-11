@@ -1,0 +1,654 @@
+<?php 
+//initialize the session
+if (!isset($_SESSION)) {
+  session_start();
+}
+
+if(!isset($_SESSION['admin']))
+{
+	header("Location:index.php");
+	 exit();
+}
+else
+{
+require_once('inc_con_bd.php');
+$req = $cdr->prepare("SELECT count(*) as nbre FROM identification WHERE login=:log");
+$req->bindParam(":log",$log,PDO::PARAM_STR);
+
+$log = $_SESSION['admin'];
+$req->execute();
+$row = $req->fetch(PDO::FETCH_ASSOC);
+
+        if($row['nbre']=="0")
+        {header("Location:index.php");
+         exit();
+        }
+        else
+        {
+                     
+                     $extension_nonimg = array(".zip",".pdf", ".ppt", ".docx", ".doc");
+                     $extension_img = array(".jpeg",".jpg", ".gif", ".png", ".bitmap");
+                     
+                     
+                    if(isset($_POST['submitted']) && $_POST['submitted'] == "true" && isset($_GET['req']) && $_GET['req'] == "i")
+                    {  
+                       
+                           
+                         
+                         
+                         
+                         
+                         if(isset($_FILES['Im']['name'][0])) {
+                         $fichier_uploade = basename($_FILES['Im']['name'][0]);
+                         $extension_uploade = strrchr("$fichier_uploade",".");
+                         
+                         $extension_uploade = strtolower($extension_uploade);
+								 
+								 if(in_array($extension_uploade, $extension_img))
+								 {include("inc_upload_immo.php");
+								 }
+								 elseif(in_array($extension_uploade,$extension_nonimg)) 
+								 {include("inc_upload_fichier.php");
+								 }
+								 
+								 }
+                          
+
+                            if(!isset($tab_lien_im[0]))
+                            {
+                                $tab_lien_im[0] = "";
+                            }
+                            
+                            if(!isset($tab_lien_im[1]))
+                            {
+                                $tab_lien_im[1] = "";
+                            }
+                            if(!isset($tab_lien_im[2]))
+                            {
+                                $tab_lien_im[2] = "";
+                            }
+                            
+                            if(!isset($_POST['editor1']))
+                            {
+                                $_POST['editor1'] = "";
+                            }
+                            
+                            if(!isset($_POST['titre']))
+                            {
+                                $_POST['titre'] = "";
+                            }
+                            
+                            if(!isset($_POST['prix']))
+                            {
+                                $_POST['prix'] = "";
+                            }
+                            
+                             
+                           if( !isset($erreur))
+                           { 
+
+                               $req = $cdr->prepare("INSERT INTO  groupe_page (texte, titre, emplacement, image2, image3, prix, file) VALUES (:texte, :titre, :emplacement, :image2, :image3, :prix, :file)");
+
+                                $req->bindParam(":texte",$_POST['editor1'],PDO::PARAM_STR);
+                                $req->bindParam(":emplacement",$emplacement,PDO::PARAM_STR);
+                                $req->bindParam(":titre",$_POST['titre'],PDO::PARAM_STR);
+                                $req->bindParam(":file",$tab_lien_im[0],PDO::PARAM_STR);
+                                $req->bindParam(":image2",$tab_lien_im[1],PDO::PARAM_STR);
+                                $req->bindParam(":image3",$tab_lien_im[2],PDO::PARAM_STR);
+                                $req->bindParam(":prix",$_POST['prix'],PDO::PARAM_STR);
+
+                                $emplacement = $_GET['emplacement'];
+                                                            
+                                $req->execute();
+
+                                
+                                                            
+                             
+                               $ok = "<strong>Mise à jour réussie. Actualisez la page.</strong>";
+                                
+
+                             
+                            }
+                       
+                            
+
+                    }
+                    elseif(isset($_POST['submitted']) && $_POST['submitted'] == "true" && isset($_GET['req']) && $_GET['req'] == "u")
+                    {
+                    	
+                    	
+                    	
+                    	   
+                         
+                         
+                         if(isset($_FILES['Im']['name'][0])) {
+                         $fichier_uploade = basename($_FILES['Im']['name'][0]);
+                         $extension_uploade = strrchr("$fichier_uploade",".");
+                         
+                         $extension_uploade = strtolower($extension_uploade);
+								 
+								 if(in_array($extension_uploade, $extension_img))
+								 {include("inc_upload_immo.php");
+								 }
+								 elseif(in_array($extension_uploade,$extension_nonimg)) 
+								 {include("inc_upload_fichier.php");
+								 }
+								 }
+                          
+
+                            if(!isset($tab_lien_im[0]))
+                            {
+                                $tab_lien_im[0] = "--";
+                            }
+                            
+                            if(!isset($_POST['editor1']))
+                            {
+                                $_POST['editor1'] = "";
+                            }
+                            
+                            if(!isset($_POST['titre']))
+                            {
+                                $_POST['titre'] = "";
+                            }
+
+                            
+                           if( !isset($erreur))
+                           { 
+                           
+                         
+                            if(count($tab_lien_im) >0 && $tab_lien_im[0]=="--")
+                            {
+                                $req = $cdr->prepare("UPDATE groupe_page SET texte=:texte, titre=:titre WHERE id=:id");
+                                $req->bindParam(":texte",$_POST['editor1'],PDO::PARAM_STR);
+                                $req->bindParam(":titre",$_POST['titre'],PDO::PARAM_STR);
+                               
+                               
+                            }
+                            else 
+                            {
+                            	  $req = $cdr->prepare("UPDATE groupe_page SET prix=:prix, texte=:texte, titre=:titre, file=:file, image2=:image2, image3=:image3 WHERE id=:id");
+                            	  $req->bindParam(":prix",$_POST['prix'],PDO::PARAM_STR);
+
+                            	  
+                                $req->bindParam(":texte",$_POST['editor1'],PDO::PARAM_STR);
+                                $req->bindParam(":titre",$_POST['titre'],PDO::PARAM_STR);
+                                $req->bindParam(":file",$tab_lien_im[0],PDO::PARAM_STR);
+                                $req->bindParam(":image2",$tab_lien_im[1],PDO::PARAM_STR);
+                                $req->bindParam(":image3",$tab_lien_im[2],PDO::PARAM_STR);
+                               
+                            }
+                             
+                               if(isset($_GET['id'])) 
+                               { 
+                                  $req->bindParam(":id",$_GET['id'],PDO::PARAM_INT);
+                               }
+                               elseif(isset($_POST['id'])) 
+                               {
+                               	 $req->bindParam(":id",$_POST['id'],PDO::PARAM_INT);
+                               }
+                               else 
+                               { $req->bindValue(":id",0,PDO::PARAM_INT);
+                               }
+                                
+                               
+
+                                $texte = $_POST['editor1'];
+                                $titre = $_POST['titre'];
+                                
+                                                            
+                                $req->execute();
+
+                                $ok = "<strong>Mise à jour réussie. Actualisez la page.</strong>";
+
+                    	
+                    	 
+                         }
+                    }
+                    
+                    
+
+
+
+
+if(isset($_GET['sup']) && ctype_digit($_GET['sup']))
+{
+$reqa = $cdr->prepare("SELECT * FROM  groupe_page WHERE id = :id LIMIT :lalimit ");
+$reqa->bindParam(":id",$_GET['sup'],PDO::PARAM_INT);
+$reqa->bindParam(":lalimit",$lalimit,PDO::PARAM_INT);
+$lalimit = 1;
+$reqa->execute();
+$resultats = $reqa->fetchall();
+
+if(sizeof($resultats)>0)
+		{
+		  if(isset($resultats[0]['file']) && !empty($resultats[0]['file']) && is_file($resultats[0]['file'])) 
+		  {
+		  	unlink($resultats[0]['file']);
+		  }
+			
+			
+		}
+	
+
+$reqa = $cdr->prepare("DELETE FROM  groupe_page WHERE id =:id LIMIT :lalimit ");
+$reqa->bindParam(":id",$_GET['sup'],PDO::PARAM_INT);
+$reqa->bindParam(":lalimit",$lalimit,PDO::PARAM_INT);
+
+$lalimit = 1;
+$reqa->execute();
+
+}
+
+if(isset($_GET['emplacement'])) {
+	$emplacement = $_GET['emplacement'];
+	}
+	else 
+	{ $emplacement = "";
+		
+	}
+	
+if(!isset($_GET['id'])) 
+{$reqa = $cdr->prepare("SELECT * FROM  groupe_page WHERE emplacement=:emplacement ORDER BY id DESC ");
+ $reqa->bindParam(":emplacement",$_GET['emplacement'],PDO::PARAM_STR);
+}
+else 
+{
+ $reqa = $cdr->prepare("SELECT * FROM  groupe_page WHERE id=:id ORDER BY id DESC ");
+ $reqa->bindParam(":id",$_GET['id'],PDO::PARAM_STR);
+}
+$reqa->execute();
+$resultatsp = $reqa->fetchall();
+
+if(sizeof($resultatsp)>0)
+		{   
+			foreach($resultatsp as $rowcamp)
+			{ $file = $rowcamp['file'];
+                          $id = $rowcamp['id'];
+                          $texte = $rowcamp['texte'];
+                          $titre = $rowcamp['titre'];
+                          $date = $rowcamp['date_publication'];
+                          $id = $rowcamp['id'];
+                          $prix = $rowcamp['prix'];
+         }
+      }
+          
+            
+        }
+}
+
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>ADMIN</title>
+<link rel="shortcut icon" type="image/x-icon" href="../images/favicon.ico" />
+<link rel="stylesheet" href="pagination/pagination.css" type="text/css" media="screen" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="edit/ckeditor.js"></script>
+
+<style>
+.les_input_tel{
+	height: 30px;
+	border-right-width: 1px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	background-color: #FFF;
+	border-left-color: #000;
+	border-bottom-color: #000;
+	border-top-color: #000;
+	border-right: #000;
+	border-bottom-style: groove;
+	border-top-style: groove;
+	border-left-style: groove;
+	border-right-style: groove;
+	font-size: 17px;
+	width: 300px;
+}
+
+
+
+.les_select{
+	height: 40px;
+	border-right-width: 1px;
+	border-top-width: 1px;
+	border-bottom-width: 1px;
+	border-left-width: 1px;
+	background-color: #FFF;
+	border-left-color: #000;
+	border-bottom-color: #000;
+	border-top-color: #000;
+	border-right: #000;
+	border-bottom-style: groove;
+	border-top-style: groove;
+	border-left-style: groove;
+	border-right-style: groove;
+	font-size: 17px;
+	width: 300px;
+}
+
+</style>
+
+
+</head>
+
+<body>
+<div id="entete"></div>
+<div id="TOTAL" style="width:600px; height:600px; margin-left:auto; margin-right:auto;">
+  <form action="" method="post" enctype="multipart/form-data" name="form1" id="form1" >
+  <?php if(isset($ok)) { echo $ok ;} ?>
+<br/><br/>
+
+<?php 
+
+
+if(isset($_GET['type']) && $_GET['type']=="a") { ?>
+ <strong>Image</strong><br/>
+<input name="Im[]" type="file" id="file" size="40" class="les_input_tel" />
+<br/><br/>
+    <strong>Titre du texte</strong><br/>
+    
+    <input name="titre" type="text" id="titre" value="<?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($titre)) {echo $titre; } ?>" size="30" class="les_input_tel" />  <br/><br/>
+    <strong>Texte </strong><br/>
+    <textarea class="ckeditor" name="editor1" cols="25" rows="5" style="width:300px;"><?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($texte)) {echo $texte; } ?></textarea>
+    
+    
+   <?php 
+   
+    }?>
+    
+    
+    <?php if(isset($_GET['type']) && $_GET['type']=="b") { ?>
+ <strong>Image</strong><br/>
+<input name="Im[]" type="file" id="file" size="40" class="les_input_tel" />
+<br/><br/>
+    <strong>Titre du texte</strong><br/>
+    
+    <input name="titre" type="text" id="titre" value="<?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($titre)) {echo $titre; } ?>" size="30" class="les_input_tel" />  <br/><br/>
+    
+    
+    
+   <?php 
+   
+    }?>
+    
+    
+    
+    <?php if(isset($_GET['type']) && $_GET['type']=="c") { ?>
+ <strong>Image</strong><br/>
+<input name="Im[]" type="file" id="file" size="40" class="les_input_tel" />
+<br/><br/>
+
+   <?php 
+   
+    }?>
+    
+    
+    <?php if(isset($_GET['type']) && $_GET['type']=="d") { ?>
+    <strong>Titre du texte (ou Url vidéo youtube pour les vidéos)</strong><br/>
+    
+    <input name="titre" type="text" id="titre" value="<?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($titre)) {echo $titre; } ?>" size="30" class="les_input_tel" />  <br/><br/>
+   <?php 
+   
+    }?> 
+    
+        <?php if(isset($_GET['type']) && $_GET['type']=="e") { ?>
+ 
+  <strong>Texte </strong><br/>
+    <textarea class="ckeditor" name="editor1" cols="25" rows="5" style="width:300px;"><?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($texte)) {echo $texte; } ?></textarea>
+    
+ 
+   <br/><br/>
+    
+    
+    
+   <?php 
+   
+    }?>  
+    
+    
+    <?php if(isset($_GET['type']) && $_GET['type']=="g") { ?>
+ 
+ <strong>Titre du texte</strong><br/>
+    
+    <input name="titre" type="text" id="titre" value="<?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($titre)) {echo $titre; } ?>" size="30" class="les_input_tel" />  <br/><br/>
+    
+    
+  <strong>Texte </strong><br/>
+    <textarea class="ckeditor" name="editor1" cols="25" rows="5" style="width:300px;"><?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($texte)) {echo $texte; } ?></textarea>
+    
+ 
+   <br/><br/>
+    
+    
+    
+   <?php 
+   
+    }?> 
+    
+    
+    <?php if(isset($_GET['type']) && $_GET['type']=="f") { ?>
+ 
+ <strong>Image</strong><br/>
+<input name="Im[]" type="file" id="file" size="40" class="les_input_tel" />
+<br/><br/>
+    
+  <strong>Texte </strong><br/>
+    <textarea class="ckeditor" name="editor1" cols="25" rows="5" style="width:300px;"><?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($texte)) {echo $texte; } ?></textarea>
+    
+ 
+   <br/><br/>
+    
+    
+    
+   <?php 
+   
+    }?>
+    
+    
+    
+    
+    
+    
+    <?php 
+
+
+if(isset($_GET['type']) && $_GET['type']=="h") { ?>
+ <strong>Image</strong><br/>
+<input name="Im[]" type="file"  size="40" class="les_input_tel" />
+<br/><br/>
+<strong>Image</strong><br/>
+<input name="Im[]" type="file"  size="40" class="les_input_tel" />
+<br/><br/>
+<strong>Image</strong><br/>
+<input name="Im[]" type="file"  size="40" class="les_input_tel" />
+<br/><br/>
+    <strong>Titre du texte</strong><br/>
+    
+    <input name="titre" type="text" id="titre" value="<?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($titre)) {echo $titre; } ?>" size="30" class="les_input_tel" />  <br/><br/>
+    
+    
+<strong>Prix</strong><br/>
+    
+    <input name="prix" type="number" id="prix" value="<?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($prix)) {echo $prix; } ?>" size="30" class="les_input_tel" /> FCFA  <br/><br/>
+        
+    
+    <strong>Texte </strong><br/>
+    <textarea class="ckeditor" name="editor1" cols="25" rows="5" style="width:300px;"><?php if(isset($_GET['req']) && $_GET['req'] == 'u' && isset($texte)) {echo $texte; } ?></textarea>
+    
+    
+   <?php 
+   
+    }?>   
+       
+     
+    
+    
+    
+        <input name="submitted" type="hidden" id="submitted" value="true" />
+        <input name="id" type="hidden" id="id" value="<?php if(isset($id)) echo $id; ?>" />
+        <br/><input type="submit" name="button" id="button" value="             VALIDER          " />
+    ---------------------------------------------------------------------------------------------------------------------------
+  </form>
+  
+  <table width="695" border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+    
+    
+    <tr>
+      <td colspan="2">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center"><?php 
+       
+         //SCRIPTE PAGINATION
+         
+                $limite = 20;
+
+                $nbre_de_page = ceil(count($resultatsp)/$limite);
+
+                if(isset($_GET['page']) && ctype_digit($_GET['page']))
+                {  if($_GET['page']>0)
+                {
+                    $page = intval($_GET['page']);
+                    if($page >= $nbre_de_page)
+                    { $page = $nbre_de_page;
+                    }
+                }
+                else{$page = 1;
+
+                }
+
+                }
+                else
+                {$page = 1;
+                }
+                $debut_comptage = ($page-1)*$limite;
+
+
+                $reqp = $cdr->prepare("SELECT * FROM groupe_page WHERE emplacement=:emplacement ORDER BY id DESC LIMIT :debut_comptage, :affiche_par_page");
+                $reqp->bindParam(":emplacement",$emplacement,PDO::PARAM_STR);
+                $reqp->bindParam(":debut_comptage",$debut_comptage,PDO::PARAM_INT);
+                $reqp->bindParam(":affiche_par_page",$limite,PDO::PARAM_INT);
+                $reqp->execute();         
+         
+          $resultatsp = $reqp->fetchall();
+
+		if(sizeof($resultatsp)>0)
+		{   
+			foreach($resultatsp as $rowcamp)
+			{ $file = $rowcamp['file'];
+                          $id = $rowcamp['id'];
+                          $texte = $rowcamp['texte'];
+                          $titre = $rowcamp['titre'];
+                          $date = $rowcamp['date_publication'];
+                          $vue = $rowcamp['vue'];
+                          $cat = $rowcamp['emplacement'];
+                         
+                          
+?>
+      
+        
+      <?php if(isset($_GET['req']) && $_GET['req']=="i") { 
+      
+      
+                         $nomimg = basename($file);
+                         $extension_nomimg = strrchr($nomimg,".");
+                         
+                         $extension_nomimg = strtolower($extension_nomimg);
+								 
+								 
+      ?>
+
+        
+        
+        
+        
+        
+         <table width="500" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td width="400" >
+            
+            <?php if(in_array($extension_nomimg, $extension_img))
+                                     {echo "<img src='../".$file."' width='50' height='50'> ";
+                                     }
+                                     if(isset($titre) && !empty($titre) && !strpos($titre, "youtube.com") )
+                                     {echo $titre;
+                                     }
+                                     elseif(isset($titre) && !empty($titre) && strpos($titre, "youtube.com") )
+                                     { include("inc_video.php");
+                                     
+                                       if(isset($ImageVideo)) {echo "<div style='width:50px; height:50px; overflow:hidden'><img src='".$ImageVideo."' width='50' height='50'></div>";}
+                                       if(isset($TitreVideo)) echo $TitreVideo; 
+                                     }
+                                     elseif(isset($texte) && !empty($texte))
+                                     { echo substr($texte, 0, 100);
+                                     }
+                                      ?>
+            
+            </td></td>
+            <td width="50" align="center"><a href="inc_form.php?iframe&req=u&type=<?php if(isset($_GET['type'])) echo $_GET['type']; ?>&emplacement=<?php if(isset($_GET['emplacement'])) echo $_GET['emplacement']; ?>&id=<?php if(isset($id)) echo $id; ?>" title="Modifier"><img src="images/img_modif.png" width="16" height="16" border="0" alt="Modifier" /></a></td>
+            <td width="50" align="center"><a href="inc_form.php?<?php echo str_replace("inc_form.php?", "", basename($_SERVER['REQUEST_URI']));?>&sup=<?php if(isset($id)) echo $id;?>" title="Modifier" onClick="return(confirm('Etes vous sûr de supprimer ?'));"><img src="images/img_sup.png" width="16" height="16" border="0" alt="supprimer" /></a></td>
+            </tr>
+          <tr>
+            <td colspan="3">&nbsp;</td>
+          </tr>
+        </table>
+        
+        
+        
+        
+        <?php 
+                 }
+                
+                         ?>
+        
+        
+        
+        
+        
+        
+      <?php 
+                 }
+                }
+                         ?>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+      
+      <div style="width: 100%; height: 40px;"> 
+                <?php // DEBUT PAGINATION
+                  
+                  include('inc_paginate.php');
+                  
+                  if(strpos(basename($_SERVER["REQUEST_URI"]), "?"))
+                  {  $marq = "&"; 
+                  }
+                  else 
+                  {  $marq = "?";
+                  }
+
+                        echo paginate(basename($_SERVER["REQUEST_URI"]), $marq."page=", $nbre_de_page, $page);
+                        
+                    // FIN PAGINATION
+                    ?>
+                </div>
+
+      
+      </td></td>
+    </tr>
+  </table>
+
+  
+                         
+                         
+                         
+
+</div>
+<div id="pied"></div>
+</body>
+</html>

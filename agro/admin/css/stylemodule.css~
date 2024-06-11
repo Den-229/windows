@@ -1,0 +1,23 @@
+
+.sgtic_admin{
+	color: red;
+	font-weight: bold;
+	display: block;
+
+}
+
+
+.sgtic_admin a{
+	color: red;
+	font-weight: bold;
+	display: block;
+
+}
+
+
+.sgtic_admin a:hover{
+	color: green;
+	font-weight: bold;
+	display: block;
+
+}

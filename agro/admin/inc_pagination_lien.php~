@@ -1,0 +1,26 @@
+<?php
+/*echo basename($_SERVER["REQUEST_URI"]);
+ include('inc_paginate.php'); 
+if(isset($_SERVER["REQUEST_URI"])) 
+{ if(!strpos(basename($_SERVER["REQUEST_URI"]), ".php")) 
+  {  $nompageparam = "index.php";
+  }
+  else 
+  {  $nompageparam = basename($_SERVER["REQUEST_URI"]);
+  }
+ 
+                  if(strpos($nompageparam, "?"))
+                  {  $marq = "&"; 
+                  }
+                  else 
+                  {  $marq = "?";
+                  }
+                  echo paginate($nompageparam, $marq."?page=", $nbre_de_page, $page);
+                  
+}*/
+
+$nompage = explode("?", basename($_SERVER["REQUEST_URI"]));
+                          
+                         
+                        echo paginate($nompage[0],"?page=", $nbre_de_page, $page);
+?>

@@ -1,0 +1,6 @@
+$(document).ready(function() {
+
+$('.video').prepend("<div class='dejavendu'><img src='admin/images/videoico.png' alt=''></div>");
+
+
+});

@@ -1,0 +1,46 @@
+  <?php
+ function modifier($champ_form,$emplacement,$limite, $resultats) {
+			if(isset($_SESSION['admin'])) 
+           {
+            if(isset($limite) && isset($resultats) && is_array($resultats))
+            { if(sizeof($resultats)>0)
+               { if($limite > 1) 
+                  { $requete = "i";
+               	}
+               	elseif($limite == 1) 
+               	{ $requete = "u";
+               	}
+               		
+               }
+               elseif(sizeof($resultats) == 0)
+               {$requete = "i";
+               }
+
+
+            }
+            
+        
+
+
+
+            if(isset($requete) && isset($emplacement) && isset($champ_form) )
+            {//echo  "<div class='sgtic_admin'> <a href='admin/inc_form.php?iframe&req=".$requete."&type=".$champ_form."&emplacement=".$emplacement."' class='various1'>Modifier</a> </div>";
+           
+             echo "<a data-fancybox data-type='iframe' data-src='admin/inc_form.php?iframe&req=".$requete."&type=".$champ_form."&emplacement=".$emplacement."' href='javascript:;'>Modifier</a>";
+            }
+           else 
+            {echo "Il manque une donnée";
+            }
+            
+            
+            
+
+}
+
+
+
+} 
+?>
+
+
+

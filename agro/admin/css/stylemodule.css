@@ -1,0 +1,28 @@
+
+.sgtic_admin{
+	color: green;
+	font-weight: bold;
+	display: block;
+
+}
+
+
+.sgtic_admin a{
+	color: green;
+	font-weight: bold;
+	display: block;
+
+}
+
+
+.sgtic_admin a:hover{
+	color: black;
+	font-weight: bold;
+	display: block;
+
+}
+
+.sgtic_selectDivModifier{
+	background: #D8D8D8;
+	
+}
